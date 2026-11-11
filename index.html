@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>History Evidence Lab · Gilded Age Review</title>
+<style>body{font:18px system-ui,sans-serif;max-width:700px;margin:12vh auto;padding:24px;color:#183646;background:#eef3f4}h1{font-size:2rem}.note{color:#4c6975}</style></head>
+<body><h1>History Evidence Lab</h1><p id="status" role="status">Opening the five historical case files…</p>
+<script>
+(async function(){
+  try {
+    const paths=Array.from({length:15},(_,i)=>'payload/part-'+String(i).padStart(2,'0')+'.txt');
+    const pieces=await Promise.all(paths.map(async path=>{
+      const response=await fetch(path,{cache:'no-cache'});
+      if(!response.ok)throw new Error('Missing source file: '+path+' ('+response.status+')');
+      return response.text();
+    }));
+    const complete=pieces.join('');
+    if(!complete.startsWith('<!doctype html')||!complete.includes('function checkAnswer(')||!complete.includes('render();'))throw new Error('The downloaded study guide is incomplete.');
+    document.open();
+    document.write(complete);
+    document.close();
+  } catch(err){
+    document.getElementById('status').textContent='The study guide could not load. Please reload the page, or ask your teacher to check the GitHub Pages files. Details: '+err.message;
+    console.error(err);
+  }
+})();
+</script></body></html>
